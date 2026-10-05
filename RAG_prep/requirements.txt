@@ -1,0 +1,8 @@
+# Dependencies for the local data-preparation scripts (scrape -> Cosmos DB -> AI Search).
+# Install with:  pip install -r RAG_prep/requirements.txt
+selenium
+beautifulsoup4
+python-dotenv
+azure-cosmos
+azure-search-documents
+azure-core
