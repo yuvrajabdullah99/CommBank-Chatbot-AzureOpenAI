@@ -1,0 +1,32 @@
+name: Deploy React frontend to Azure Static Web Apps
+
+# Runs when the frontend changes on main, or manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "chatbot-client/**"
+      - ".github/workflows/deploy_frontend.yaml"
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and deploy frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          # Repository secret: the Static Web App's deployment token (see README).
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/chatbot-client"
+          api_location: ""            # The backend is a separate Azure Function App, not a SWA managed API.
+          output_location: "build"
+        env:
+          # Repository *variable* (Settings > Secrets and variables > Actions > Variables).
+          # Create React App bakes REACT_APP_* values into the bundle at build time.
+          REACT_APP_FUNCTION_URL: ${{ vars.REACT_APP_FUNCTION_URL }}
